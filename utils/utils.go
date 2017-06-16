@@ -2,7 +2,7 @@ package utils
 
 import "strings"
 
-var regionAndPlatform = [string]string{
+var regionAndPlatform = map[string]string{
   "BR": "BR1",
   "EUNE": "EUN1",
   "EUW": "EUW1",
@@ -17,12 +17,12 @@ var regionAndPlatform = [string]string{
 }
 
 // RegionToPlatform - Devuelve la plataforma correspondiente a la region dada
-func RegionToPlatform(string region) string {
+func RegionToPlatform(region string) string {
   return regionAndPlatform[strings.ToUpper(region)]
 }
 
 // PlatformToRegion - Devuelve la region correspondiente a la plataforma dada
-func PlatformToRegion(string platformToFind) string {
+func PlatformToRegion(platformToFind string) string {
   platformToFind = strings.ToUpper(platformToFind)
 
   for _, platform := range regionAndPlatform {
@@ -30,4 +30,6 @@ func PlatformToRegion(string platformToFind) string {
       return platform
     }
   }
+
+  return "NA"
 }

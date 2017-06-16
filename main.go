@@ -1,13 +1,15 @@
 package main
 
 import (
-  "coloso-queue/queue"
+  "fmt"
+  "coloso-queue/clients/riot"
 )
 func main() {
-  newEntry := queue.JSONEntry{
-    FetchType: "probando",
-    FetchID: "1234233452",
+  summoner, err := riot.FetchSummonerByID("LAN_754512")
+
+  if err == nil {
+    fmt.Printf("%+v\n", summoner)
   }
 
-  queue.AddEntry(newEntry)
+  fmt.Printf("%s", err)
 }

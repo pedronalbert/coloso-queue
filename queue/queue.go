@@ -28,10 +28,17 @@ type JSONEntry struct {
 }
 
 // GetLength - Devuelve la longitud actual de la cola
-func GetLength() int64 {
-  length, _ := redis.Client.LLen(queueName).Result()
+func GetLength() (int64, error) {
+  length, err := redis.Client.LLen(queueName).Result()
 
-  return length
+  if err != nil {
+    log.Error("No se ha podido obtener la longitud de la cola")
+    log.Error(err)
+
+    return 0, err
+  }
+
+  return length, nil
 }
 
 // GetNextEntry - Devuelve la primera entrada en la cola
@@ -39,7 +46,6 @@ func GetNextEntry() (JSONEntry, error) {
   var jsonEntry JSONEntry
 
   textEntry, err := redis.Client.LPop(queueName).Result()
-
 
   if err != nil {
     log.Info("No hay mas entradas en cola")
