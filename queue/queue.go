@@ -18,20 +18,23 @@ var ErrNotMoreEntries = errors.New("No hay mas entradas en cola")
 // ErrNotAdded
 var ErrNotAdded = errors.New("No se ha podido añadir a la cola")
 
+// ErrDuplicateEntry
+var ErrDuplicateEntry = errors.New("La entrada ya se encuentra en cola")
+
 // JSONEntry - estructura de una entrada en la cola
 type JSONEntry struct {
   FetchType string `json:"fetchType"`
   FetchID string `json:"fetchId"`
 }
 
-// GetLength - devuelve la longitud actual de la cola
+// GetLength - Devuelve la longitud actual de la cola
 func GetLength() int64 {
   length, _ := redis.Client.LLen(queueName).Result()
 
   return length
 }
 
-// GetNextEntry - devuelve la proxima entrada en la cola
+// GetNextEntry - Devuelve la primera entrada en la cola
 func GetNextEntry() (JSONEntry, error) {
   var jsonEntry JSONEntry
 
@@ -39,16 +42,16 @@ func GetNextEntry() (JSONEntry, error) {
 
 
   if err != nil {
-    log.Info("Not more entries in queue")
+    log.Info("No hay mas entradas en cola")
     return jsonEntry, ErrNotMoreEntries
   }
 
-  log.Debugf("Entry loaded from redis: %s", textEntry)
+  log.Debugf("Entrada leida desde redis: %s", textEntry)
 
   err = json.Unmarshal([]byte(textEntry), &jsonEntry)
 
   if err != nil {
-    log.Error("Can't decode the JSON")
+    log.Error("No se ha podido decodificar decodifiar el JSON")
     return jsonEntry, err
   }
 
@@ -61,7 +64,7 @@ func GetAllEntries() ([]JSONEntry, error) {
   entriesString, err := redis.Client.LRange(queueName, 0, -1).Result()
 
   if err != nil {
-    log.Error("Can't load entries list", err)
+    log.Error("No se ha podido cargar la lista de entradas", err)
 
     return entries, err
   }
@@ -74,33 +77,60 @@ func GetAllEntries() ([]JSONEntry, error) {
     if (err == nil) {
       entries = append(entries, entry)
     } else {
-      log.Error("Can't encode JSON: ", entryString)
+      log.Error("No se ha podido codificar el JSON", entryString)
     }
   }
 
   return entries, nil
 }
 
-// AddEntry - Agregar entrada al final de la cola
-func AddEntry(entry JSONEntry) (queuePosition int64, err error) {
+func hasDuplicateEntry(entries []JSONEntry, entryToFind JSONEntry) bool {
+  for _, entry := range entries {
+    if entry == entryToFind {
+      return true
+    }
+  }
+
+  return false
+}
+
+// Enqueue - Agregar entrada al final de la cola
+func Enqueue(entry JSONEntry) (queuePosition int64, err error) {
   entryBytes, err := json.Marshal(entry)
   entryString := string(entryBytes)
+  isEnqueued, err := IsEnqueued(entry)
+
+  if isEnqueued || err != nil {
+    log.Info("La entrada ya se encuentra en cola")
+    return -1, ErrDuplicateEntry
+  }
 
   if err != nil {
-    log.Error("Can't create JSON entry")
+    log.Error("No se ha podido crear el JSON")
     return -1, err
   }
 
-  result := redis.Client.LPush(queueName, entryString)
+  result := redis.Client.RPush(queueName, entryString)
 
   if result.Err() != nil {
-    log.Error("Can't add entry to queue")
+    log.Error("No se ha podido agregar la entrada a la cola")
 
     return -1, result.Err()
   }
 
   queuePos, _ := result.Result()
-  log.Info("Entry added to position: ", queuePos)
+  log.Info("Entrada agregada a la cola en la posicion: ", queuePos)
 
   return queuePos, nil
+}
+
+// IsEnqueued - Chequea si la entrada que recibe ya se encuentra en cola
+func IsEnqueued(entry JSONEntry) (bool, error) {
+  entries, err := GetAllEntries()
+
+  if err != nil {
+    return true, err
+  }
+
+  return hasDuplicateEntry(entries, entry), nil
 }
