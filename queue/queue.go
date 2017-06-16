@@ -66,8 +66,6 @@ func GetAllEntries() ([]JSONEntry, error) {
     return entries, err
   }
 
-
-
   for _, entryString := range entriesString {
     var entry JSONEntry
 
