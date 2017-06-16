@@ -39,16 +39,16 @@ func GetNextEntry() (JSONEntry, error) {
 
 
   if err != nil {
-    log.Info("No hay mas entradas en la cola")
+    log.Info("Not more entries in queue")
     return jsonEntry, ErrNotMoreEntries
   }
 
-  log.Debugf("Obtenida entrada de redis: %s", textEntry)
+  log.Debugf("Entry loaded from redis: %s", textEntry)
 
   err = json.Unmarshal([]byte(textEntry), &jsonEntry)
 
   if err != nil {
-    log.Critical("No se ha podido decodificar el JSON: %s", err)
+    log.Error("Can't decode the JSON")
     return jsonEntry, err
   }
 
@@ -57,7 +57,30 @@ func GetNextEntry() (JSONEntry, error) {
 
 // GetAllEntries - Devuelve todas las entradas de la cola
 func GetAllEntries() ([]JSONEntry, error) {
-  
+  entries := []JSONEntry{}
+  entriesString, err := redis.Client.LRange(queueName, 0, -1).Result()
+
+  if err != nil {
+    log.Error("Can't load entries list", err)
+
+    return entries, err
+  }
+
+
+
+  for _, entryString := range entriesString {
+    var entry JSONEntry
+
+    err = json.Unmarshal([]byte(entryString), &entry)
+
+    if (err == nil) {
+      entries = append(entries, entry)
+    } else {
+      log.Error("Can't encode JSON: ", entryString)
+    }
+  }
+
+  return entries, nil
 }
 
 // AddEntry - Agregar entrada al final de la cola
@@ -66,20 +89,20 @@ func AddEntry(entry JSONEntry) (queuePosition int64, err error) {
   entryString := string(entryBytes)
 
   if err != nil {
-    log.Error("No se ha podido crear el JSON")
+    log.Error("Can't create JSON entry")
     return -1, err
   }
 
   result := redis.Client.LPush(queueName, entryString)
 
   if result.Err() != nil {
-    log.Error("No se ha podido añadir a la cola")
+    log.Error("Can't add entry to queue")
 
     return -1, result.Err()
   }
 
   queuePos, _ := result.Result()
-  log.Info("Entrada añádida a la cola en la posicion ", queuePos)
+  log.Info("Entry added to position: ", queuePos)
 
   return queuePos, nil
 }
