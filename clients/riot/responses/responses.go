@@ -48,3 +48,181 @@ type MasteriesPages struct {
 		Name string `json:"name"`
 	} `json:"pages"`
 }
+
+// Game - Esquema de un juego
+type Game struct {
+	SeasonID int `json:"seasonId"`
+	QueueID int `json:"queueId"`
+	GameID int `json:"gameId"`
+	ParticipantIdentities []struct {
+		Player struct {
+			CurrentPlatformID string `json:"currentPlatformId"`
+			SummonerName string `json:"summonerName"`
+			MatchHistoryURI string `json:"matchHistoryUri"`
+			PlatformID string `json:"platformId"`
+			CurrentAccountID int `json:"currentAccountId"`
+			ProfileIcon int `json:"profileIcon"`
+			SummonerID int `json:"summonerId"`
+			AccountID int `json:"accountId"`
+		} `json:"player"`
+		ParticipantID int `json:"participantId"`
+	} `json:"participantIdentities"`
+	GameVersion string `json:"gameVersion"`
+	PlatformID string `json:"platformId"`
+	GameMode string `json:"gameMode"`
+	MapID int `json:"mapId"`
+	GameType string `json:"gameType"`
+	Teams []struct {
+		FirstDragon bool `json:"firstDragon"`
+		FirstInhibitor bool `json:"firstInhibitor"`
+		Bans []struct {
+			PickTurn int `json:"pickTurn"`
+			ChampionID int `json:"championId"`
+		} `json:"bans"`
+    BaronKills int `json:"baronKills"`
+    FirstRiftHerald bool `json:"firstRiftHerald"`
+    FirstBaron bool `json:"firstBaron"`
+		RiftHeraldKills int `json:"riftHeraldKills"`
+    FirstBlood bool `json:"firstBlood"`
+    TeamID int `json:"teamId"`
+    FirstTower bool `json:"firstTower"`
+    VilemawKills int `json:"vilemawKills"`
+    InhibitorKills int `json:"inhibitorKills"`
+    TowerKills int `json:"towerKills"`
+    DominionVictoryScore int `json:"dominionVictoryScore"`
+		Win string `json:"win"`
+    DragonKills int `json:"dragonKills"`
+	} `json:"teams"`
+	Participants []struct {
+		Stats struct {
+      PhysicalDamageDealt int `json:"physicalDamageDealt"`
+      NeutralMinionsKilledTeamJungle int `json:"neutralMinionsKilledTeamJungle"`
+      MagicDamageDealt int `json:"magicDamageDealt"`
+			TotalPlayerScore int `json:"totalPlayerScore"`
+      Deaths int `json:"deaths"`
+      Win bool `json:"win"`
+      NeutralMinionsKilledEnemyJungle int `json:"neutralMinionsKilledEnemyJungle"`
+      LargestCriticalStrike int `json:"largestCriticalStrike"`
+      TotalDamageDealt int `json:"totalDamageDealt"`
+      MagicDamageDealtToChampions int `json:"magicDamageDealtToChampions"`
+      AltarsCaptured int `json:"altarsCaptured"`
+			VisionScore int `json:"visionScore"`
+			UnrealKills int `json:"unrealKills"`
+			ObjectivePlayerScore int `json:"objectivePlayerScore"`
+			LargestMultiKill int `json:"largestMultiKill"`
+			LargestKillingSpree int `json:"largestKillingSpree"`
+			QuadraKills int `json:"quadraKills"`
+			TotalTimeCrowdControlDealt int `json:"totalTimeCrowdControlDealt"`
+			MagicalDamageTaken int `json:"magicalDamageTaken"`
+			LongestTimeSpentLiving int `json:"longestTimeSpentLiving"`
+			FirstTowerAssist bool `json:"firstTowerAssist"`
+			GoldEarned int `json:"goldEarned"`
+      Item0 int `json:"item0"`
+      Item1 int `json:"item1"`
+			Item2 int `json:"item2"`
+			Item3 int `json:"item3"`
+      Item4 int `json:"item4"`
+      Item5 int `json:"item5"`
+      Item6 int `json:"item6"`
+      Kills int `json:"kills"`
+			WardsPlaced int `json:"wardsPlaced"`
+			TurretKills int `json:"turretKills"`
+			TripleKills int `json:"tripleKills"`
+			DamageSelfMitigated int `json:"damageSelfMitigated"`
+			GoldSpent int `json:"goldSpent"`
+			DoubleKills int `json:"doubleKills"`
+			FirstInhibitorKill bool `json:"firstInhibitorKill"`
+			TrueDamageTaken int `json:"trueDamageTaken"`
+			FirstBloodAssist bool `json:"firstBloodAssist"`
+			FirstBloodKill bool `json:"firstBloodKill"`
+			Assists int `json:"assists"`
+			TotalScoreRank int `json:"totalScoreRank"`
+			NeutralMinionsKilled int `json:"neutralMinionsKilled"`
+			CombatPlayerScore int `json:"combatPlayerScore"`
+			VisionWardsBoughtInGame int `json:"visionWardsBoughtInGame"`
+			DamageDealtToTurrets int `json:"damageDealtToTurrets"`
+			PhysicalDamageDealtToChampions int `json:"physicalDamageDealtToChampions"`
+			PentaKills int `json:"pentaKills"`
+			TrueDamageDealt int `json:"trueDamageDealt"`
+			TrueDamageDealtToChampions int `json:"trueDamageDealtToChampions"`
+			ChampLevel int `json:"champLevel"`
+			ParticipantID int `json:"participantId"`
+			FirstInhibitorAssist bool `json:"firstInhibitorAssist"`
+			WardsKilled int `json:"wardsKilled"`
+			FirstTowerKill bool `json:"firstTowerKill"`
+			TotalHeal int `json:"totalHeal"`
+			TotalMinionsKilled int `json:"totalMinionsKilled"`
+			DamageDealtToObjectives int `json:"damageDealtToObjectives"`
+			SightWardsBoughtInGame int `json:"sightWardsBoughtInGame"`
+			TotalDamageDealtToChampions int `json:"totalDamageDealtToChampions"`
+			TotalUnitsHealed int `json:"totalUnitsHealed"`
+			InhibitorKills int `json:"inhibitorKills"`
+			TotalDamageTaken int `json:"totalDamageTaken"`
+			KillingSprees int `json:"killingSprees"`
+			TimeCCingOthers int `json:"timeCCingOthers"`
+			PhysicalDamageTaken int `json:"physicalDamageTaken"`
+			TeamObjective int `json:"teamObjective"`
+			NodeNeutralizeAssist int `json:"nodeNeutralizeAssist"`
+			NodeNeutralize int `json:"nodeNeutralize"`
+			NodeCaptureAssist int `json:"nodeCaptureAssist"`
+			AltarsNeutralized int `json:"altarsNeutralized"`
+			NodeCapture int `json:"nodeCapture"`
+		} `json:"stats"`
+    ParticipantID int `json:"participantId"`
+    Runes []struct {
+      RuneID int `json:"runeId"`
+      Rank int `json:"rank"`
+    } `json:"runes"`
+		Spell1ID int `json:"spell1Id"`
+    Spell2ID int `json:"spell2Id"`
+		HighestAchievedSeasonTier string `json:"highestAchievedSeasonTier"`
+		Masteries []struct {
+			MasteryID int `json:"masteryId"`
+			Rank int `json:"rank"`
+		} `json:"masteries"`
+		TeamID int `json:"teamId"`
+		Timeline struct {
+			Lane string `json:"lane"`
+			ParticipantID int `json:"participantId"`
+			CsDiffPerMinDeltas struct {
+				Two030 float64 `json:"20-30"`
+				Zero10 float64 `json:"0-10"`
+				One020 int `json:"10-20"`
+			} `json:"csDiffPerMinDeltas"`
+			GoldPerMinDeltas struct {
+				Two030 float64 `json:"20-30"`
+				Zero10 float64 `json:"0-10"`
+				One020 float64 `json:"10-20"`
+			} `json:"goldPerMinDeltas"`
+			XpDiffPerMinDeltas struct {
+				Two030 float64 `json:"20-30"`
+				Zero10 float64 `json:"0-10"`
+				One020 float64 `json:"10-20"`
+			} `json:"xpDiffPerMinDeltas"`
+			CreepsPerMinDeltas struct {
+				Two030 float64 `json:"20-30"`
+				Zero10 float64 `json:"0-10"`
+				One020 float64 `json:"10-20"`
+			} `json:"creepsPerMinDeltas"`
+			XpPerMinDeltas struct {
+				Two030 float64 `json:"20-30"`
+				Zero10 float64 `json:"0-10"`
+				One020 float64 `json:"10-20"`
+			} `json:"xpPerMinDeltas"`
+			Role string `json:"role"`
+			DamageTakenDiffPerMinDeltas struct {
+				Two030 int `json:"20-30"`
+				Zero10 float64 `json:"0-10"`
+				One020 float64 `json:"10-20"`
+			} `json:"damageTakenDiffPerMinDeltas"`
+			DamageTakenPerMinDeltas struct {
+				Two030 float64 `json:"20-30"`
+				Zero10 float64 `json:"0-10"`
+				One020 int `json:"10-20"`
+			} `json:"damageTakenPerMinDeltas"`
+		} `json:"timeline"`
+		ChampionID int `json:"championId"`
+	} `json:"participants"`
+	GameDuration int `json:"gameDuration"`
+	GameCreation int64 `json:"gameCreation"`
+}

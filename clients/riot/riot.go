@@ -134,3 +134,20 @@ func FetchChampionsMasteries(sumURID string) ([]responses.ChampionMastery, error
 
   return championsMasteries, nil
 }
+
+// FetchGame - Devuelve el juego
+func FetchGame(gameURID string) (responses.Game, error) {
+  var game responses.Game
+
+  ID := urid.GetID(gameURID)
+  region := urid.GetRegion(gameURID)
+
+  url := createURL(region, "match/v3/matches/" + ID)
+  err := fetch(url, &game)
+
+  if err != nil {
+    return game, err
+  }
+
+  return game, nil
+}
