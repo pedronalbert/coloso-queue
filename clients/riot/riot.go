@@ -13,6 +13,10 @@ import (
 var riotKey = "RGAPI-9938cbc8-8a46-43f2-babe-784c4ffe6814"
 var log = logging.MustGetLogger("riot_client")
 
+func init() {
+  goreq.SetConnectTimeout(30000 * time.Millisecond)
+}
+
 func createURL(region string, url string) string {
   platform := utils.RegionToPlatform(region)
   platform = strings.ToLower(platform)
@@ -47,10 +51,6 @@ func fetch(url string, response interface{}) error {
   log.Debugf("Datos obtenidos correctamente: %s", url)
 
   return nil
-}
-
-func init() {
-  goreq.SetConnectTimeout(30000 * time.Millisecond)
 }
 
 // FetchSummonerByName - Devuelve la informacion del summoner
