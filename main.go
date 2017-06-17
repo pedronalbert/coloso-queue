@@ -1,15 +1,15 @@
 package main
 
-import (
-  "fmt"
-  "coloso-queue/clients/riot"
-)
 func main() {
-  summoner, err := riot.FetchSummonerByID("LAN_754512")
+  regions := [3]string{"lan", "las", "na"}
+  queues := make(map[string]*Queue)
 
-  if err == nil {
-    fmt.Printf("%+v\n", summoner)
+  for _, region := range regions {
+    queues[region] = NewQueue(region)
   }
 
-  fmt.Printf("%s", err)
+  queues["lan"].Enqueue(QueueEntry{
+    FetchType: "summoner",
+    FetchID: "123456",
+  })
 }
