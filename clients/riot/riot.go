@@ -24,10 +24,10 @@ func createURL(region string, url string) string {
   return "https://" + platform + ".api.riotgames.com/lol/" + url
 }
 
-func fetch(url string, response interface{}) error {
+func fetch(response interface{}, url string, query interface {}) error {
   log.Debugf("Obteniendo datos de Riot API %s", url)
 
-  res, err := goreq.Request{ Uri: url }.WithHeader("X-Riot-Token", riotKey).Do()
+  res, err := goreq.Request{ Uri: url, QueryString: query }.WithHeader("X-Riot-Token", riotKey).Do()
 
   if err != nil {
     switch res.StatusCode {
@@ -58,7 +58,7 @@ func FetchSummonerByName(name string, region string) (responses.Summoner, error)
   var summoner responses.Summoner
 
   url := createURL(region, "summoner/v3/summoners/by-name/" + name)
-  err := fetch(url, &summoner)
+  err := fetch(&summoner, url, nil)
 
   if err != nil {
     return summoner, err
@@ -75,7 +75,7 @@ func FetchSummonerByID(sumURID string) (responses.Summoner, error) {
   region := urid.GetRegion(sumURID)
 
   url := createURL(region, "summoner/v3/summoners/" + ID)
-  err := fetch(url, &summoner)
+  err := fetch(&summoner, url, nil)
 
   if err != nil {
     return summoner, err
@@ -92,7 +92,7 @@ func FetchRunesPages(sumURID string) (responses.RunesPages, error) {
   region := urid.GetRegion(sumURID)
 
   url := createURL(region, "platform/v3/runes/by-summoner/" + ID)
-  err := fetch(url, &runesPages)
+  err := fetch(&runesPages, url, nil)
 
   if err != nil {
     return runesPages, err
@@ -109,7 +109,7 @@ func FetchMasteriesPages(sumURID string) (responses.MasteriesPages, error) {
   region := urid.GetRegion(sumURID)
 
   url := createURL(region, "platform/v3/masteries/by-summoner/" + ID)
-  err := fetch(url, &masteriesPages)
+  err := fetch(&masteriesPages, url, nil)
 
   if err != nil {
     return masteriesPages, err
@@ -126,7 +126,7 @@ func FetchChampionsMasteries(sumURID string) ([]responses.ChampionMastery, error
   region := urid.GetRegion(sumURID)
 
   url := createURL(region, "champion-mastery/v3/champion-masteries/by-summoner/" + ID)
-  err := fetch(url, &championsMasteries)
+  err := fetch(&championsMasteries, url, nil)
 
   if err != nil {
     return championsMasteries, err
@@ -143,7 +143,7 @@ func FetchGame(gameURID string) (responses.Game, error) {
   region := urid.GetRegion(gameURID)
 
   url := createURL(region, "match/v3/matches/" + ID)
-  err := fetch(url, &game)
+  err := fetch(&game, url, nil)
 
   if err != nil {
     return game, err
@@ -160,11 +160,28 @@ func FetchGameTimelines(gameURID string) (responses.GameTimelines, error) {
   region := urid.GetRegion(gameURID)
 
   url := createURL(region, "match/v3/timelines/by-match/" + ID)
-  err := fetch(url, &timelines)
+  err := fetch(&timelines, url, nil)
 
   if err != nil {
     return timelines, err
   }
 
   return timelines, nil
+}
+
+// FetchGamesList - Hace un fetch de los matchsList de la API
+func FetchGamesList(accountURID string, query interface{}) (responses.GamesList, error) {
+  var gamesList responses.GamesList
+
+  ID := urid.GetID(accountURID)
+  region := urid.GetRegion(accountURID)
+
+  url := createURL(region, "match/v3/matchlists/by-account/" + ID)
+  err := fetch(&gamesList, url, query)
+
+  if err != nil {
+    return gamesList, err
+  }
+
+  return gamesList, nil
 }
