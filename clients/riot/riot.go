@@ -151,3 +151,20 @@ func FetchGame(gameURID string) (responses.Game, error) {
 
   return game, nil
 }
+
+// FetchGameTimelines - Devuelve el juego
+func FetchGameTimelines(gameURID string) (responses.GameTimelines, error) {
+  var timelines responses.GameTimelines
+
+  ID := urid.GetID(gameURID)
+  region := urid.GetRegion(gameURID)
+
+  url := createURL(region, "match/v3/timelines/by-match/" + ID)
+  err := fetch(url, &timelines)
+
+  if err != nil {
+    return timelines, err
+  }
+
+  return timelines, nil
+}

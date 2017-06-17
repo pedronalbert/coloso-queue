@@ -226,3 +226,40 @@ type Game struct {
 	GameDuration int `json:"gameDuration"`
 	GameCreation int64 `json:"gameCreation"`
 }
+
+type participantFrame struct {
+  ParticipantID int `json:"participantId"`
+  Position struct {
+    X int `json:"x"`
+    Y int `json:"y"`
+  } `json:"position"`
+  CurrentGold int `json:"currentGold"`
+  TotalGold int `json:"totalGold"`
+  Level int `json:"level"`
+  Xp int `json:"xp"`
+  MinionsKilled int `json:"minionsKilled"`
+  JungleMinionsKilled int `json:"jungleMinionsKilled"`
+  DominionScore int `json:"dominionScore"`
+  TeamScore int `json:"teamScore"`
+}
+
+// GameTimelines - Timelines de un game
+type GameTimelines struct {
+	Frames []struct {
+		ParticipantFrames struct {
+			Num1 participantFrame `json:"1"`
+			Num2 participantFrame `json:"2"`
+			Num3 participantFrame `json:"3"`
+			Num4 participantFrame `json:"4"`
+			Num5 participantFrame `json:"5"`
+			Num6 participantFrame `json:"6"`
+			Num7 participantFrame `json:"7"`
+			Num8 participantFrame `json:"8"`
+			Num9 participantFrame `json:"9"`
+			Num10 participantFrame `json:"10"`
+		} `json:"participantFrames"`
+		Events []interface{} `json:"events"`
+		Timestamp int `json:"timestamp"`
+	} `json:"frames"`
+	FrameInterval int `json:"frameInterval"`
+}
