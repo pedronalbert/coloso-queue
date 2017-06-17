@@ -5,7 +5,6 @@ import (
   "strings"
   "coloso-queue/utils"
   "coloso-queue/utils/urid"
-  "coloso-queue/clients/riot/entities"
   "coloso-queue/clients/riot/responses"
   "github.com/op/go-logging"
   "github.com/franela/goreq"
@@ -27,10 +26,7 @@ func fetch(url string, response interface{}) error {
   res, err := goreq.Request{ Uri: url }.WithHeader("X-Riot-Token", riotKey).Do()
 
   if err != nil {
-    return err
-  }
-
-  switch res.StatusCode {
+    switch res.StatusCode {
     case 400:
       return ErrBadRequest
     case 401:
@@ -41,6 +37,9 @@ func fetch(url string, response interface{}) error {
       return ErrNotFound
     default:
       return ErrServerError
+    }
+
+    return err
   }
 
   res.Body.FromJsonTo(&response)
@@ -55,51 +54,66 @@ func init() {
 }
 
 // FetchSummonerByName - Devuelve la informacion del summoner
-func FetchSummonerByName(name string, region string) (entities.Summoner, error) {
-  var response responses.Summoner
-  var summoner entities.Summoner
+func FetchSummonerByName(name string, region string) (responses.Summoner, error) {
+  var summoner responses.Summoner
 
   url := createURL(region, "summoner/v3/summoners/by-name/" + name)
-  err := fetch(url, &response)
+  err := fetch(url, &summoner)
 
   if err != nil {
     return summoner, err
-  }
-
-  summoner = entities.Summoner{
-    ID: urid.Generate(region, response.ID),
-    ProfileIconID: response.ProfileIconID,
-    Name: response.Name,
-    SummonerLevel: response.SummonerLevel,
-    AccountID: response.AccountID,
-    RevisionDate: response.RevisionDate,
   }
 
   return summoner, nil
 }
 
 // FetchSummonerByID - Devuelve la informacion del summoner por ID tipo URID
-func FetchSummonerByID(sumUrid string) (entities.Summoner, error) {
-  var response responses.Summoner
-  var summoner entities.Summoner
-  ID := urid.GetID(sumUrid)
-  region := urid.GetRegion(sumUrid)
+func FetchSummonerByID(sumURID string) (responses.Summoner, error) {
+  var summoner responses.Summoner
+
+  ID := urid.GetID(sumURID)
+  region := urid.GetRegion(sumURID)
 
   url := createURL(region, "summoner/v3/summoners/" + ID)
-  err := fetch(url, &response)
+  err := fetch(url, &summoner)
 
   if err != nil {
     return summoner, err
   }
 
-  summoner = entities.Summoner{
-    ID: urid.Generate(region, response.ID),
-    ProfileIconID: response.ProfileIconID,
-    Name: response.Name,
-    SummonerLevel: response.SummonerLevel,
-    AccountID: response.AccountID,
-    RevisionDate: response.RevisionDate,
+  return summoner, nil
+}
+
+// FetchRunesPages - Devuelve las runas de un invocador
+func FetchRunesPages(sumURID string) (responses.RunesPages, error) {
+  var runesPages responses.RunesPages
+
+  ID := urid.GetID(sumURID)
+  region := urid.GetRegion(sumURID)
+
+  url := createURL(region, "platform/v3/runes/by-summoner/" + ID)
+  err := fetch(url, &runesPages)
+
+  if err != nil {
+    return runesPages, err
   }
 
-  return summoner, nil
+  return runesPages, nil
+}
+
+// FetchChampionsMasteries - Devuelve la lista de maestrías de un invocador
+func FetchChampionsMasteries(sumURID string) ([]responses.ChampionMastery, error) {
+  var championsMasteries []responses.ChampionMastery
+
+  ID := urid.GetID(sumURID)
+  region := urid.GetRegion(sumURID)
+
+  url := createURL(region, "champion-mastery/v3/champion-masteries/by-summoner/" + ID)
+  err := fetch(url, &championsMasteries)
+
+  if err != nil {
+    return championsMasteries, err
+  }
+
+  return championsMasteries, nil
 }
