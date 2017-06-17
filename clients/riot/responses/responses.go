@@ -14,7 +14,7 @@ type Summoner struct {
 type RunesPages struct {
 	SummonerID int64 `json:"summonerId"`
 	Pages []struct {
-    ID int `json:"id"`
+    ID int64 `json:"id"`
     Name string `json:"name"`
 		Current bool `json:"current"`
 		Slots []struct {
@@ -33,4 +33,18 @@ type ChampionMastery struct {
   ChampionPointsUntilNextLevel int64 `json:"championPointsUntilNextLevel"`
   ChampionPointsSinceLastLevel int64 `json:"championPointsSinceLastLevel"`
   LastPlayTime int64 `json:"lastPlayTime"`
+}
+
+// MasteriesPages = Esquema de respuesta de masteries
+type MasteriesPages struct {
+	SummonerID int64 `json:"summonerId"`
+	Pages []struct {
+		Current bool `json:"current"`
+		Masteries []struct {
+			ID int64 `json:"id"`
+			Rank int `json:"rank"`
+		} `json:"masteries"`
+		ID int64 `json:"id"`
+		Name string `json:"name"`
+	} `json:"pages"`
 }

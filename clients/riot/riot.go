@@ -101,6 +101,23 @@ func FetchRunesPages(sumURID string) (responses.RunesPages, error) {
   return runesPages, nil
 }
 
+// FetchMasteriesPages - Devuelve las runas de un invocador
+func FetchMasteriesPages(sumURID string) (responses.MasteriesPages, error) {
+  var masteriesPages responses.MasteriesPages
+
+  ID := urid.GetID(sumURID)
+  region := urid.GetRegion(sumURID)
+
+  url := createURL(region, "platform/v3/masteries/by-summoner/" + ID)
+  err := fetch(url, &masteriesPages)
+
+  if err != nil {
+    return masteriesPages, err
+  }
+
+  return masteriesPages, nil
+}
+
 // FetchChampionsMasteries - Devuelve la lista de maestrías de un invocador
 func FetchChampionsMasteries(sumURID string) ([]responses.ChampionMastery, error) {
   var championsMasteries []responses.ChampionMastery
