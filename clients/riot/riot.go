@@ -185,3 +185,20 @@ func FetchGamesList(accountURID string, query interface{}) (responses.GamesList,
 
   return gamesList, nil
 }
+
+// FetchLeaguePosition - Hace un fetch de la posiciones en la liga
+func FetchLeaguePosition(sumURID string) ([]responses.LeaguePostition, error) {
+  var leaguePosition []responses.LeaguePostition
+
+  ID := urid.GetID(sumURID)
+  region := urid.GetRegion(sumURID)
+
+  url := createURL(region, "league/v3/positions/by-summoner/" + ID)
+  err := fetch(&leaguePosition, url, nil)
+
+  if err != nil {
+    return leaguePosition, err
+  }
+
+  return leaguePosition, nil
+}

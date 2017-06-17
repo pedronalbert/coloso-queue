@@ -280,3 +280,26 @@ type GamesList struct {
 	EndIndex int `json:"endIndex"`
 	TotalGames int `json:"totalGames"`
 }
+
+// LeaguePostition - Esquema de posicion en la liga
+type LeaguePostition struct {
+	QueueType string `json:"queueType"`
+	HotStreak bool `json:"hotStreak"`
+	Wins int `json:"wins"`
+	Veteran bool `json:"veteran"`
+	Losses int `json:"losses"`
+	PlayerOrTeamID string `json:"playerOrTeamId"`
+	Tier string `json:"tier"`
+	PlayerOrTeamName string `json:"playerOrTeamName"`
+	Inactive bool `json:"inactive"`
+	Rank string `json:"rank"`
+	FreshBlood bool `json:"freshBlood"`
+	LeagueName string `json:"leagueName"`
+	LeaguePoints int `json:"leaguePoints"`
+  MiniSeries struct {
+    Wins int `json:"wins"`
+    Losses int `json:"losses"`
+    Target int `json:"target"`
+    Progress string `json:"progress"`
+  } `json:"miniSeries"`
+}
