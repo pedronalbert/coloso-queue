@@ -1,6 +1,7 @@
 package cache
 
 import "errors"
+import "strings"
 import "coloso-queue/clients/mysql"
 import "coloso-queue/models"
 import "github.com/op/go-logging"
@@ -39,6 +40,20 @@ func FindSummonerByID(sumID string) (models.Summoner, error) {
   mysql.Client.Where("id = ?", sumID).First(&sumFound)
 
   if sumFound.ID != sumID {
+    err = ErrNotFound
+  }
+
+  return sumFound, err
+}
+
+// FindSummonerByName - find summoner by name and region in cache
+func FindSummonerByName(name string, region string) (models.Summoner, error) {
+  var sumFound models.Summoner
+  var err error
+
+  mysql.Client.Where("name = LOWER(?) AND region = UPPER(?)", name, region).First(&sumFound)
+
+  if strings.ToLower(sumFound.Name) != strings.ToLower(name) {
     err = ErrNotFound
   }
 
