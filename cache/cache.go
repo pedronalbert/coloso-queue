@@ -1,6 +1,5 @@
 package cache
 
-import "errors"
 import "coloso-queue/clients/mysql"
 import "coloso-queue/models"
 import "github.com/op/go-logging"
