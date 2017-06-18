@@ -83,10 +83,22 @@ func TestGetAllEntries(t *testing.T) {
   entries, err := queueTesting.GetAllEntries()
 
   if err != nil {
-    t.Fatalf("Can't get all entries from queue\n error: %s", err)
+    t.Fatalf("Can't get all entries from queue\nerror: %s", err)
   }
 
   if len(entries) == 0 {
     t.Fatalf("Entries slice is empty")
+  }
+}
+
+func TestGetNextEntry(t *testing.T) {
+  nextEntry, err := queueTesting.GetNextEntry()
+
+  if err != nil {
+    t.Fatalf("Can't get next entry\nerror: %s", err)
+  }
+
+  if nextEntry != entryTesting {
+    t.Fatalf("Next Entry doesn't match\nexpected Entry: %+v \ngot Entry: %+v", entryTesting, nextEntry)
   }
 }
