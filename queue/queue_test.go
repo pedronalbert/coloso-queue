@@ -103,6 +103,18 @@ func TestIsEnqueued(t *testing.T) {
   }
 }
 
+func TestGetLength(t *testing.T) {
+  length, err := queueTesting.GetLength()
+
+  if err != nil {
+    t.Fatalf("Can't determine the length\nerror: %s", err)
+  }
+
+  if length <= 0 {
+    t.Fatalf("Bad length expected: int greater than 0, got %d", length)
+  }
+}
+
 func TestGetNextEntry(t *testing.T) {
   nextEntry, err := queueTesting.GetNextEntry()
 
