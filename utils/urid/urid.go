@@ -3,6 +3,7 @@ package urid
 import (
   "regexp"
   "strings"
+  "strconv"
 )
 
 // GetID - Devuelve el ID de una URID
@@ -24,8 +25,8 @@ func GetRegion(urid string) string {
 }
 
 // Generate - Devuelve un nuevo URID
-func Generate(region string, ID string) string {
+func Generate(region string, ID int) string {
   region = strings.ToUpper(region)
 
-  return region + "_" + ID
+  return region + "_" + strconv.Itoa(ID)
 }
