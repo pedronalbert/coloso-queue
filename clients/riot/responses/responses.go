@@ -2,19 +2,19 @@ package responses
 
 // Summoner - Esquema de respuesta de un invocador
 type Summoner struct {
-  ID int64 `json:"id"`
-  ProfileIconID int64 `json:"profileIconId"`
+  ID int `json:"id"`
+  ProfileIconID int `json:"profileIconId"`
   Name string `json:"name"`
-  SummonerLevel int64 `json:"summonerLevel"`
-  AccountID int64 `json:"accountId"`
-  RevisionDate int64 `json:"revisionDate"`
+  SummonerLevel int `json:"summonerLevel"`
+  AccountID int `json:"accountId"`
+  RevisionDate int `json:"revisionDate"`
 }
 
 // RunesPages - Esquema de respuesta de runas
 type RunesPages struct {
-	SummonerID int64 `json:"summonerId"`
+	SummonerID int `json:"summonerId"`
 	Pages []struct {
-    ID int64 `json:"id"`
+    ID int `json:"id"`
     Name string `json:"name"`
 		Current bool `json:"current"`
 		Slots []struct {
@@ -27,24 +27,24 @@ type RunesPages struct {
 // ChampionMastery - Esquema de la respuesta de champion-mastery
 type ChampionMastery struct {
   ChestGranted bool `json:"ChestGranted"`
-  ChampionLevel int64 `json:"championLevel"`
-  ChampionPoints int64 `json:"championPoints"`
-  ChampionID int64 `json:"championId"`
-  ChampionPointsUntilNextLevel int64 `json:"championPointsUntilNextLevel"`
-  ChampionPointsSinceLastLevel int64 `json:"championPointsSinceLastLevel"`
-  LastPlayTime int64 `json:"lastPlayTime"`
+  ChampionLevel int `json:"championLevel"`
+  ChampionPoints int `json:"championPoints"`
+  ChampionID int `json:"championId"`
+  ChampionPointsUntilNextLevel int `json:"championPointsUntilNextLevel"`
+  ChampionPointsSinceLastLevel int `json:"championPointsSinceLastLevel"`
+  LastPlayTime int `json:"lastPlayTime"`
 }
 
 // MasteriesPages = Esquema de respuesta de masteries
 type MasteriesPages struct {
-	SummonerID int64 `json:"summonerId"`
+	SummonerID int `json:"summonerId"`
 	Pages []struct {
 		Current bool `json:"current"`
 		Masteries []struct {
-			ID int64 `json:"id"`
+			ID int `json:"id"`
 			Rank int `json:"rank"`
 		} `json:"masteries"`
-		ID int64 `json:"id"`
+		ID int `json:"id"`
 		Name string `json:"name"`
 	} `json:"pages"`
 }
@@ -224,7 +224,7 @@ type Game struct {
 		ChampionID int `json:"championId"`
 	} `json:"participants"`
 	GameDuration int `json:"gameDuration"`
-	GameCreation int64 `json:"gameCreation"`
+	GameCreation int `json:"gameCreation"`
 }
 
 type participantFrame struct {
@@ -268,11 +268,11 @@ type GameTimelines struct {
 type GamesList struct {
 	Matches []struct {
 		PlatformID string `json:"platformId"`
-		GameID int64 `json:"gameId"`
+		GameID int `json:"gameId"`
 		Champion int `json:"champion"`
 		Queue int `json:"queue"`
 		Season int `json:"season"`
-		Timestamp int64 `json:"timestamp"`
+		Timestamp int `json:"timestamp"`
 		Role string `json:"role"`
 		Lane string `json:"lane"`
 	} `json:"matches"`
