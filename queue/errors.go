@@ -4,10 +4,10 @@ import (
   "errors"
 )
 // ErrNotMoreEntries
-var ErrNotMoreEntries = errors.New("No hay mas entradas en cola")
+var ErrNotMoreEntries = errors.New("There is not more entries")
 
 // ErrNotAdded
-var ErrNotAdded = errors.New("No se ha podido añadir a la cola")
+var ErrNotAdded = errors.New("Can't added to queue")
 
 // ErrDuplicateEntry
-var ErrDuplicateEntry = errors.New("La entrada ya se encuentra en cola")
+var ErrDuplicateEntry = errors.New("Entry is already in queue")
