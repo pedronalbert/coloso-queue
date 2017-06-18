@@ -52,3 +52,15 @@ func TestUpdateOnSaveSummoner(t *testing.T) {
     t.Fatalf("Summoner is not updating on save\nexpected: %+v\ngot: %+v", sumTesting, sumInDb)
   }
 }
+
+func TestFindSummonerById(t *testing.T) {
+  sumFound, err := cache.FindSummonerByID(sumTesting.ID)
+
+  if err != nil {
+    t.Fatalf("Can't find summoner ID: %s in cache\nerror: %s", sumTesting.ID, err)
+  }
+
+  if sumFound.ID != sumTesting.ID {
+    t.Fatalf("Summoner found not match\nexpected ID: %s got ID: %s", sumTesting.ID, sumFound.ID)
+  }
+}
