@@ -10,11 +10,14 @@ import "coloso-queue/clients/redis"
 
 var regionTesting = "test"
 var queueTesting *queue.Queue
-var fetchIDTesting string
+var entryTesting queue.Entry
 
 func setup() {
   queueTesting = queue.New(regionTesting)
-  fetchIDTesting = strconv.Itoa(rand.Intn(100))
+  entryTesting = queue.Entry{
+    FetchID: strconv.Itoa(rand.Intn(100)),
+    FetchType: "summoner",
+  }
 }
 
 func clearRedis() {
@@ -43,10 +46,7 @@ func TestNewQueue(t *testing.T) {
 
 func TestEnqueue(t *testing.T) {
   var entry queue.Entry
-  pos, err := queueTesting.Enqueue(queue.Entry{
-    FetchType: "summoner",
-    FetchID: fetchIDTesting,
-  })
+  pos, err := queueTesting.Enqueue(entryTesting)
 
   if err != nil {
     t.Fatalf("Can't enqueue the entry\n%s", err)
@@ -67,15 +67,12 @@ func TestEnqueue(t *testing.T) {
     t.Fatalf("Can't decode redis entry to JSON\n%s", err)
   }
 
-  if entry.FetchID != fetchIDTesting {
-    t.Fatalf("Entry in redis not match\nexpected FetchID: %s got FetchID %s", fetchIDTesting, entry.FetchID)
+  if entry != entryTesting {
+    t.Fatalf("Entry in redis doesn't match\nexpected Entry: %+v \ngot Entry: %+v", entryTesting, entry)
   }
 
   //Check can't allow same entry
-  pos, err = queueTesting.Enqueue(queue.Entry{
-    FetchType: "summoner",
-    FetchID: fetchIDTesting,
-  })
+  pos, err = queueTesting.Enqueue(entryTesting)
 
   if err == nil {
     t.Fatalf("Queue is allowing duplicated entries")
