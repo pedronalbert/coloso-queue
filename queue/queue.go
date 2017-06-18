@@ -1,4 +1,4 @@
-package main
+package queue
 
 import (
   "strings"
@@ -9,8 +9,8 @@ import (
 
 var log = logging.MustGetLogger("queue")
 
-// QueueEntry - estructura de una entrada en la cola
-type QueueEntry struct {
+// Entry - estructura de una entrada en la cola
+type Entry struct {
   FetchType string `json:"fetchType"`
   FetchID string `json:"fetchId"`
 }
@@ -20,8 +20,8 @@ type Queue struct {
   Name string
 }
 
-// NewQueue - create new queue
-func NewQueue(region string) *Queue {
+// New - create new queue
+func New(region string) *Queue {
   region = strings.ToLower(region)
 
   return &Queue{
@@ -32,6 +32,7 @@ func NewQueue(region string) *Queue {
 // GetLength - Devuelve la longitud actual de la cola
 func (queue *Queue) GetLength() (int64, error) {
   length, err := redis.Client.LLen(queue.Name).Result()
+
 
   if err != nil {
     log.Error("No se ha podido obtener la longitud de la cola")
@@ -44,8 +45,8 @@ func (queue *Queue) GetLength() (int64, error) {
 }
 
 // GetNextEntry - Devuelve la primera entrada en la cola
-func (queue *Queue) GetNextEntry() (QueueEntry, error) {
-  var queueEntry QueueEntry
+func (queue *Queue) GetNextEntry() (Entry, error) {
+  var queueEntry Entry
 
   textEntry, err := redis.Client.LPop(queue.Name).Result()
 
@@ -67,8 +68,8 @@ func (queue *Queue) GetNextEntry() (QueueEntry, error) {
 }
 
 // GetAllEntries - Devuelve todas las entradas de la cola
-func (queue *Queue) GetAllEntries() ([]QueueEntry, error) {
-  entries := []QueueEntry{}
+func (queue *Queue) GetAllEntries() ([]Entry, error) {
+  entries := []Entry{}
   entriesString, err := redis.Client.LRange(queue.Name, 0, -1).Result()
 
   if err != nil {
@@ -78,7 +79,7 @@ func (queue *Queue) GetAllEntries() ([]QueueEntry, error) {
   }
 
   for _, entryString := range entriesString {
-    var entry QueueEntry
+    var entry Entry
 
     err = json.Unmarshal([]byte(entryString), &entry)
 
@@ -92,7 +93,7 @@ func (queue *Queue) GetAllEntries() ([]QueueEntry, error) {
   return entries, nil
 }
 
-func hasDuplicateEntry(entries []QueueEntry, entryToFind QueueEntry) bool {
+func hasDuplicateEntry(entries []Entry, entryToFind Entry) bool {
   for _, entry := range entries {
     if entry == entryToFind {
       return true
@@ -103,7 +104,7 @@ func hasDuplicateEntry(entries []QueueEntry, entryToFind QueueEntry) bool {
 }
 
 // Enqueue - Agregar entrada al final de la cola
-func (queue *Queue) Enqueue(entry QueueEntry) (queuePosition int64, err error) {
+func (queue *Queue) Enqueue(entry Entry) (queuePosition int64, err error) {
   entryBytes, err := json.Marshal(entry)
   entryString := string(entryBytes)
   isEnqueued, err := queue.IsEnqueued(entry)
@@ -133,7 +134,7 @@ func (queue *Queue) Enqueue(entry QueueEntry) (queuePosition int64, err error) {
 }
 
 // IsEnqueued - Chequea si la entrada que recibe ya se encuentra en cola
-func (queue *Queue) IsEnqueued(entry QueueEntry) (bool, error) {
+func (queue *Queue) IsEnqueued(entry Entry) (bool, error) {
   entries, err := queue.GetAllEntries()
 
   if err != nil {
