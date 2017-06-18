@@ -99,7 +99,7 @@ func TestIsEnqueued(t *testing.T) {
   }
 
   if isEnqueued == false {
-    t.Fatalf("Bad enqueued determination, expected: true, got: false")
+    t.Fatalf("Bad enqueued determination \nexpected: true, got: false")
   }
 }
 
@@ -111,7 +111,7 @@ func TestGetLength(t *testing.T) {
   }
 
   if length <= 0 {
-    t.Fatalf("Bad length expected: int greater than 0, got %d", length)
+    t.Fatalf("Bad length \nexpected: int greater than 0, got %d", length)
   }
 }
 
