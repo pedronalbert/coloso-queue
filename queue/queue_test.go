@@ -91,6 +91,18 @@ func TestGetAllEntries(t *testing.T) {
   }
 }
 
+func TestIsEnqueued(t *testing.T) {
+  isEnqueued, err := queueTesting.IsEnqueued(entryTesting)
+
+  if err != nil {
+    t.Fatalf("Can't determine if is already enqueued\nerror: %s", err)
+  }
+
+  if isEnqueued == false {
+    t.Fatalf("Bad enqueued determination, expected: true, got: false")
+  }
+}
+
 func TestGetNextEntry(t *testing.T) {
   nextEntry, err := queueTesting.GetNextEntry()
 
