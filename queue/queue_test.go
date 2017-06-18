@@ -78,3 +78,15 @@ func TestEnqueue(t *testing.T) {
     t.Fatalf("Queue is allowing duplicated entries")
   }
 }
+
+func TestGetAllEntries(t *testing.T) {
+  entries, err := queueTesting.GetAllEntries()
+
+  if err != nil {
+    t.Fatalf("Can't get all entries from queue\n error: %s", err)
+  }
+
+  if len(entries) == 0 {
+    t.Fatalf("Entries slice is empty")
+  }
+}
