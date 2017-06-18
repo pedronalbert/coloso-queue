@@ -46,7 +46,7 @@ func fetch(response interface{}, url string, query interface {}) error {
     return err
   }
 
-  res.Body.FromJsonTo(&response)
+  res.Body.FromJsonTo(response)
 
   log.Debugf("Datos obtenidos correctamente: %s", url)
 
