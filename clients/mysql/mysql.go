@@ -8,15 +8,17 @@ import (
 var mysqlDb = "coloso"
 var mysqlUser = "root"
 var mysqlPassword = "123456"
-var client gorm.DB
 
-// GetClient - Singleton
-func GetClient() gorm.DB {
-  if client != nil {
-    return client
+// Mysql client
+var Client *gorm.DB
+
+
+func init() {
+  connectedDb, err := gorm.Open("mysql", mysqlUser + ":" + mysqlPassword + "@/" + mysqlDb + "?charset=utf8&parseTime=True&loc=Local")
+
+  if err != nil {
+    panic(err)
   }
 
-  db, err := gorm.Open("mysql", mysqlUser + ":" + mysqlPassword + "@/" + mysqlDb + "?charset=utf8&parseTime=True&loc=Local")
-
-  return db
+  Client = connectedDb
 }

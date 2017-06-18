@@ -4,6 +4,19 @@ import (
   "time"
 )
 
+// Summoner model
+type Summoner struct{
+  ID string `gorm:"primary_key"`
+  AccountID string `gorm:"column:accountId"`
+  Name string `gorm:"column:name"`
+  SummonerLevel int `gorm:"column:summonerLevel"`
+  ProfileIconID int `gorm:"column:profileIconId"`
+  Region string `gorm:"column:region"`
+  RevisionDate int `gorm:"column:revisionDate"`
+  CreatedAt time.Time
+  UpdatedAt time.Time
+}
+
 // Game model
 type Game struct {
   ID string `gorm:"column:id"`
