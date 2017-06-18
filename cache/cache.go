@@ -7,9 +7,6 @@ import "github.com/op/go-logging"
 
 var log = logging.MustGetLogger("queue")
 
-// ErrNotSaved
-var ErrNotSaved = errors.New("Can not saved in DB")
-
 // SaveSummoner - save summoner in cache
 func SaveSummoner(newSum models.Summoner) models.Summoner {
   var sumInDb models.Summoner
@@ -23,7 +20,7 @@ func SaveSummoner(newSum models.Summoner) models.Summoner {
 
     return newSum
   }
-  
+
   log.Debugf("Summoner ID: %s already exist in cache, updating", newSum.ID)
 
   mysql.Client.Model(&sumInDb).Updates(newSum)
