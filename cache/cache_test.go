@@ -2,7 +2,7 @@ package cache_test
 
 import "os"
 import "testing"
-import "strings"
+
 import "coloso-queue/models"
 import "coloso-queue/cache"
 import "coloso-queue/clients/mysql"
@@ -83,21 +83,20 @@ func TestFindSummonerByName(t *testing.T) {
 	sumFound, err := cache.FindSummonerByName(sumTesting.Name, sumTesting.Region)
 
 	if err != nil {
-		t.Fatalf("Can't find summoner name: %s, region: %s", sumTesting.Name, sumTesting.Region)
+		t.Fatalf("Can't find summoner name: %s in cache\nerror: %s", sumTesting.Name, err)
 	}
 
-	if sumFound.ID != sumTesting.ID {
-		t.Fatalf("Summoner found not match\nexpected ID: %s got ID: %s", sumTesting.ID, sumFound.ID)
+	if !compareSummoners(sumFound, sumTesting) {
+		t.Fatalf("Summoner found in cache not match with testing\nexpected: %+v\ngot: %+v", sumTesting, sumFound)
 	}
+}
 
-	// Test uppercased name
-	sumFound, err = cache.FindSummonerByName(sumTesting.Name, sumTesting.Region)
+func TestFindSummonerByNameNotFound(t *testing.T) {
+	var err error
 
-	if err != nil {
-		t.Fatalf("Can't find summoner name: %s, region: %s", strings.ToUpper(sumTesting.Name), sumTesting.Region)
-	}
+	_, err = cache.FindSummonerByName("", "")
 
-	if sumFound.ID != sumTesting.ID {
-		t.Fatalf("Summoner found not match\nexpected ID: %s got ID: %s", sumTesting.ID, sumFound.ID)
+	if err != nil && err != cache.ErrNotFound {
+		t.Fatalf("Error returned not match\nexpected: %s\ngot: %s", cache.ErrNotFound, err)
 	}
 }
