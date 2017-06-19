@@ -4,8 +4,8 @@ import "testing"
 import "coloso-queue/utils"
 
 type compareStruct struct {
-	A string
-	B int
+	A string `json:"a"`
+	B int    `json:"b"`
 }
 
 func TestCompareStructsEquals(t *testing.T) {
@@ -35,5 +35,19 @@ func TestCompareStructsDifferents(t *testing.T) {
 
 	if equals {
 		t.Fatalf("Bad compare determination, expected: false, got: true")
+	}
+}
+
+func TestStructToString(t *testing.T) {
+	var structA compareStruct
+	var expectedString, resultString string
+
+	expectedString = `{"a":"A","b":1}`
+	structA = compareStruct{A: "A", B: 1}
+
+	resultString = utils.StructToString(structA)
+
+	if resultString != expectedString {
+		t.Fatalf("Strings doesn't match\nexpected: %s\ngot: %s", expectedString, resultString)
 	}
 }
