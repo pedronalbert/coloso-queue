@@ -69,6 +69,16 @@ func TestFindSummonerById(t *testing.T) {
 	}
 }
 
+func TestFindSummonerByIdNotFound(t *testing.T) {
+	var err error
+
+	_, err = cache.FindSummonerByID("")
+
+	if err != nil && err != cache.ErrNotFound {
+		t.Fatalf("Error returned not match\nexpected: %s\ngot: %s", cache.ErrNotFound, err)
+	}
+}
+
 func TestFindSummonerByName(t *testing.T) {
 	sumFound, err := cache.FindSummonerByName(sumTesting.Name, sumTesting.Region)
 
