@@ -22,6 +22,12 @@ func setup() {
 	}
 }
 
+func compareSummoners(sumA models.Summoner, sumB models.Summoner) bool {
+	var compareKeys = []string{"ID", "AccountID", "Name", "SummonerLevel", "ProfileIconID", "Region", "RevisionDate"}
+
+	return utils.CompareStructs(sumA, sumB, compareKeys)
+}
+
 func TestMain(m *testing.M) {
 	setup()
 	code := m.Run()
@@ -30,17 +36,16 @@ func TestMain(m *testing.M) {
 
 func TestSaveSummoner(t *testing.T) {
 	var sumInDb models.Summoner
-	var compareKeys = []string{"ID", "AccountID", "Name", "SummonerLevel", "ProfileIconID", "Region", "RevisionDate"}
 
 	sumCreated := cache.SaveSummoner(sumTesting)
 
-	if !utils.CompareStructs(sumCreated, sumTesting, compareKeys) {
+	if !compareSummoners(sumCreated, sumTesting) {
 		t.Fatalf("Summoner returned by cache not match\nexpected: %+v\ngot: %+v", sumTesting, sumCreated)
 	}
 
 	mysql.Client.Where("id = ?", sumTesting.ID).First(&sumInDb)
 
-	if !utils.CompareStructs(sumCreated, sumInDb, compareKeys) {
+	if !compareSummoners(sumCreated, sumInDb) {
 		t.Fatalf("Summoner returned by mysql not match\nexpected: %+v\ngot: %+v", sumTesting, sumCreated)
 	}
 }
@@ -59,8 +64,8 @@ func TestFindSummonerById(t *testing.T) {
 		t.Fatalf("Can't find summoner ID: %s in cache\nerror: %s", sumTesting.ID, err)
 	}
 
-	if sumFound.ID != sumTesting.ID {
-		t.Fatalf("Summoner found not match\nexpected ID: %s got ID: %s", sumTesting.ID, sumFound.ID)
+	if !compareSummoners(sumFound, sumTesting) {
+		t.Fatalf("Summoner found in cache not match with testing\nexpected: %+v\ngot: %+v", sumTesting, sumFound)
 	}
 }
 
