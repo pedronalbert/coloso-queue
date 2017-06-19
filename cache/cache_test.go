@@ -5,6 +5,7 @@ import "testing"
 
 import "coloso-queue/models"
 import "coloso-queue/utils"
+import "coloso-queue/clients/mysql"
 
 var sumTesting models.Summoner
 
@@ -20,6 +21,10 @@ func setup() {
 	}
 }
 
+func shutdown() {
+	mysql.Client.Delete(sumTesting)
+}
+
 func compareSummoners(sumA models.Summoner, sumB models.Summoner) bool {
 	var compareKeys = []string{"ID", "AccountID", "Name", "SummonerLevel", "ProfileIconID", "Region", "RevisionDate"}
 
@@ -29,5 +34,6 @@ func compareSummoners(sumA models.Summoner, sumB models.Summoner) bool {
 func TestMain(m *testing.M) {
 	setup()
 	code := m.Run()
+	shutdown()
 	os.Exit(code)
 }
