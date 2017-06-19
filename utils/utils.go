@@ -2,6 +2,7 @@ package utils
 
 import "strings"
 import "reflect"
+import "encoding/json"
 
 var regionAndPlatform = map[string]string{
 	"BR":   "BR1",
@@ -49,4 +50,13 @@ func CompareStructs(sta interface{}, stb interface{}, keys []string) bool {
 		}
 	}
 	return equals
+}
+
+// StructToString - Parse json struct to string
+func StructToString(st interface{}) string {
+	var resultBytes []byte
+
+	resultBytes, _ = json.Marshal(st)
+
+	return string(resultBytes)
 }
