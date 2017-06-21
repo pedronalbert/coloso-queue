@@ -9,6 +9,7 @@ import "coloso-queue/clients/mysql"
 
 var sumTesting models.Summoner
 var runesTesting models.RunesPages
+var masteriesTesting models.MasteriesPages
 
 func setup() {
 	sumTesting = models.Summoner{
@@ -31,6 +32,21 @@ func setup() {
 				Slots: []models.RunePageSlot{
 					{RuneSlotID: 1, RuneID: 1},
 					{RuneSlotID: 2, RuneID: 1},
+				},
+			},
+		},
+	}
+
+	masteriesTesting = models.MasteriesPages{
+		SummonerID: sumTesting.ID,
+		Pages: []models.MasteryPage{
+			{
+				ID:      1,
+				Name:    "Testing",
+				Current: false,
+				Masteries: []models.Mastery{
+					{ID: 1, Rank: 1},
+					{ID: 2, Rank: 1},
 				},
 			},
 		},
