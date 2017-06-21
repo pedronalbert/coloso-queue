@@ -8,7 +8,7 @@ import "coloso-queue/utils"
 import "coloso-queue/clients/mysql"
 
 var sumTesting models.Summoner
-var runesTesting models.RunesPages
+var runesTesting models.RunesPage
 var masteriesTesting models.MasteriesPages
 
 func setup() {
@@ -22,7 +22,7 @@ func setup() {
 		RevisionDate:  12345,
 	}
 
-	runesTesting = models.RunesPages{
+	runesTesting = models.RunesPage{
 		SummonerID: sumTesting.ID,
 		Pages: []models.RunePage{
 			{
@@ -63,7 +63,7 @@ func compareSummoners(sumA models.Summoner, sumB models.Summoner) bool {
 	return utils.CompareStructs(sumA, sumB, compareKeys)
 }
 
-func compareRunes(runA models.RunesPages, runB models.RunesPages) bool {
+func compareRunes(runA models.RunesPage, runB models.RunesPage) bool {
 	var compareKeys = []string{"SummonerID", "Pages"}
 
 	return utils.CompareStructs(runA, runB, compareKeys)

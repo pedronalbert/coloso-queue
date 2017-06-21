@@ -4,6 +4,7 @@ import (
 	"coloso-queue/clients/mysql"
 	"coloso-queue/models"
 	"coloso-queue/utils"
+	"encoding/json"
 	"time"
 )
 
@@ -22,7 +23,7 @@ func (RunesPagesRaw) TableName() string {
 }
 
 // SaveRunesPages - Save pages in db
-func SaveRunesPages(newRunes models.RunesPages) models.RunesPages {
+func SaveRunesPages(newRunes models.RunesPage) models.RunesPage {
 	var rawRunes RunesPagesRaw
 
 	rawRunes = RunesPagesRaw{
@@ -53,7 +54,37 @@ func SaveRunesPages(newRunes models.RunesPages) models.RunesPages {
 
 	mysql.Client.Save(&rawRunes)
 
+	newRunes.ID = rawRunes.ID
 	newRunes.UpdatedAt = rawRunes.UpdatedAt
+	newRunes.CreatedAt = rawRunes.CreatedAt
 
 	return newRunes
+}
+
+// FindRunesPage = FindRunesPage
+func FindRunesPage(sumURID string) (runesPage models.RunesPage, err error) {
+	var runesPageRaw RunesPagesRaw
+	var pages []models.RunePage
+
+	mysql.Client.Where("summonerId = ?", sumURID).First(&runesPageRaw)
+
+	if runesPageRaw.ID == 0 {
+		return runesPage, ErrNotFound
+	}
+
+	err = json.Unmarshal([]byte(runesPageRaw.Pages), &pages)
+
+	if err != nil {
+		return runesPage, nil
+	}
+
+	runesPage = models.RunesPage{
+		ID:         runesPageRaw.ID,
+		SummonerID: runesPageRaw.SummonerID,
+		Pages:      pages,
+		CreatedAt:  runesPageRaw.CreatedAt,
+		UpdatedAt:  runesPageRaw.UpdatedAt,
+	}
+
+	return runesPage, nil
 }

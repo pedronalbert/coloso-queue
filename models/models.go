@@ -31,8 +31,8 @@ type RunePage struct {
 	Slots   []RunePageSlot `json:"slots"`
 }
 
-// RunesPages - Esquema de respuesta de runas
-type RunesPages struct {
+// RunesPage - Esquema de respuesta de runas
+type RunesPage struct {
 	ID         int        `gorm:"column:id;AUTO_INCREMENT"`
 	SummonerID string     `gorm:"column:summonerId"`
 	Pages      []RunePage `gorm:"column:pages" json:"pages"`
