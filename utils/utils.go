@@ -45,7 +45,7 @@ func CompareStructs(sta interface{}, stb interface{}, keys []string) bool {
 	refValueB = reflect.ValueOf(stb)
 
 	for _, key := range keys {
-		if refValueA.FieldByName(key).Interface() != refValueB.FieldByName(key).Interface() {
+		if !reflect.DeepEqual(refValueA.FieldByName(key).Interface(), refValueB.FieldByName(key).Interface()) {
 			equals = false
 		}
 	}
