@@ -23,37 +23,39 @@ func (MasteriesPageRaw) TableName() string {
 
 // SaveMasteriesPage - Save pages in db
 func SaveMasteriesPage(newMasteries models.MasteriesPages) models.MasteriesPages {
-	var rawRunes MasteriesPageRaw
+	var rawMasteries MasteriesPageRaw
 
-	rawRunes = MasteriesPageRaw{
+	rawMasteries = MasteriesPageRaw{
 		ID:         newMasteries.ID,
 		SummonerID: newMasteries.SummonerID,
 	}
 
-	mysql.Client.First(&rawRunes)
+	mysql.Client.First(&rawMasteries)
 
 	// Assign values to save
-	rawRunes.SummonerID = newMasteries.SummonerID
-	rawRunes.Pages = utils.StructToString(newMasteries.Pages)
+	rawMasteries.SummonerID = newMasteries.SummonerID
+	rawMasteries.Pages = utils.StructToString(newMasteries.Pages)
 
-	if rawRunes.ID == 0 {
+	if rawMasteries.ID == 0 {
 		log.Debugf("Masteries not found in cache, creating new")
 
-		mysql.Client.Create(&rawRunes)
+		mysql.Client.Create(&rawMasteries)
 
 		// Assign values saved to returned object
-		newMasteries.ID = rawRunes.ID
-		newMasteries.CreatedAt = rawRunes.CreatedAt
-		newMasteries.UpdatedAt = rawRunes.UpdatedAt
+		newMasteries.ID = rawMasteries.ID
+		newMasteries.CreatedAt = rawMasteries.CreatedAt
+		newMasteries.UpdatedAt = rawMasteries.UpdatedAt
 
 		return newMasteries
 	}
 
 	log.Debugf("Masteries already stored in cache, updating data")
 
-	mysql.Client.Save(&rawRunes)
+	mysql.Client.Save(&rawMasteries)
 
-	newMasteries.UpdatedAt = rawRunes.UpdatedAt
+	newMasteries.ID = rawMasteries.ID
+	newMasteries.CreatedAt = rawMasteries.CreatedAt
+	newMasteries.UpdatedAt = rawMasteries.UpdatedAt
 
 	return newMasteries
 }
